@@ -48,9 +48,7 @@ class _RecorrerRutaScreenState extends State<RecorrerRutaScreen> {
 
   // Función para obtener la ubicación actual del dispositivo
   Future<void> _getCurrentLocation() async {
-    Position position = await Geolocator.getCurrentPosition(
-        locationSettings: AndroidSettings()
-    );
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _initialPosition = LatLng(position.latitude,
           position.longitude); // Establecer la ubicación inicial

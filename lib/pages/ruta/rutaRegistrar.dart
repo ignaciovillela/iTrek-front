@@ -7,29 +7,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart' as http;
 import 'package:itrek_maps/config.dart';
 
-/// Solicitar permisos de ubicación en primer plano y, si es necesario, en segundo plano
-Future<void> requestBackgroundPermission() async {
-  LocationPermission permission = await Geolocator.checkPermission();
-
-  if (permission == LocationPermission.denied) {
-    // Solicitar permisos si han sido denegados
-    permission = await Geolocator.requestPermission();
-  }
-
-  if (permission == LocationPermission.deniedForever) {
-    // No se pueden pedir permisos de nuevo, es necesario llevar al usuario a la configuración
-    return Future.error('Los permisos de ubicación están denegados permanentemente.');
-  }
-
-  if (permission == LocationPermission.whileInUse) {
-    // Si necesitas permisos en segundo plano, los solicitas aquí
-    permission = await Geolocator.requestPermission();
-    if (permission != LocationPermission.always) {
-      return Future.error('Se necesita permiso de ubicación en segundo plano.');
-    }
-  }
-}
-
 // Función para convertir una lista de coordenadas LatLng a un formato JSON
 List<Map<String, dynamic>> convertirAFormato(List<LatLng> listaCoords) {
   return List<Map<String, dynamic>>.generate(listaCoords.length, (index) {
@@ -131,10 +108,7 @@ class GoogleMapsPageState extends State<GoogleMapsPage> {
   }
 
   Future<void> _getCurrentLocation() async {
-    await requestBackgroundPermission();
-    Position position = await Geolocator.getCurrentPosition(
-      locationSettings: AndroidSettings(),
-    );
+    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
     setState(() {
       _initialPosition = LatLng(position.latitude, position.longitude);
       _markers['currentPosition'] = Marker(
@@ -184,7 +158,7 @@ class GoogleMapsPageState extends State<GoogleMapsPage> {
       _locationTimer = Timer.periodic(const Duration(milliseconds: 1500), (timer) async {
         _lastPosition ??= _initialPosition;
 
-        Position position = await Geolocator.getCurrentPosition(locationSettings: AndroidSettings());
+        Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
         final newPosition = LatLng(position.latitude, position.longitude);
 
         double distance = Geolocator.distanceBetween(
