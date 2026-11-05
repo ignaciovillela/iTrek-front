@@ -4,6 +4,8 @@ App móvil en **Flutter** para registrar, guardar y compartir rutas de trekking.
 
 > Proyecto personal desarrollado entre **septiembre y diciembre de 2024** (235 commits). Backend: [iTrek-back](https://github.com/ignaciovillela/iTrek-back).
 
+🖥️ **Backend (Django REST):** [ignaciovillela/iTrek-back](https://github.com/ignaciovillela/iTrek-back)
+
 ## Pantallas
 
 | Ingreso | Inicio | Listado de rutas | Detalle de ruta |
